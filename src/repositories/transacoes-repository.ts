@@ -29,8 +29,6 @@ export const novaTransacaoRepository = async (transacao: TransacaoModel): Promis
 
         }
 
-        console.log(typeof data);
-
         // Escrever de volta no arquivo, sobrescrevendo o antigo
         await fs.writeFile(caminho, JSON.stringify(data), 'utf-8');
 
@@ -44,4 +42,16 @@ export const novaTransacaoRepository = async (transacao: TransacaoModel): Promis
         return StatusCode.badRequest;
 
     }
+}
+
+export const deletarTrancascoesRepository = async (): Promise<StatusCode> => {
+    // Caminho do arquivo de transações
+    const path = './src/data/transactions.json';
+
+    // Limpar o arquivo com texto vazio
+    await fs.writeFile(path, '', 'utf-8');
+
+    // Retorna o StatusCode de sucesso
+    return StatusCode.ok;
+
 }

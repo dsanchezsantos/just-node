@@ -1,4 +1,4 @@
-import { novaTransacaoRepository } from "../repositories/transacoes-repository";
+import { deletarTrancascoesRepository, novaTransacaoRepository } from "../repositories/transacoes-repository";
 import { StatusCode } from "../utils/StatusCode";
 
 export const novaTransacaoService = async (transacaoParam: string): Promise<StatusCode> => {
@@ -19,8 +19,10 @@ export const novaTransacaoService = async (transacaoParam: string): Promise<Stat
 }
 
 export const deletarTransacoesService = async () => {
+
     // Solicita ao repository a deleção dos dados
-    return StatusCode.ok;
+    return await deletarTrancascoesRepository();
+    
 }
 
 // Verifica se a transação enviada está de acordo com as normas estabelecidas
