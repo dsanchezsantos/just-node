@@ -34,7 +34,7 @@ export const serverApp = async (request: IncomingMessage, response: ServerRespon
 
         // Caso o usuario queira deletar uma transacao
         if(request.method === HttpMethods.DELETE) {
-            await TransacoesController.deletarTransacaoController(request, response);
+            await TransacoesController.deletarTransacoesController(request, response);
         }
         
     }
