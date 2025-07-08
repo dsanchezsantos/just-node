@@ -5,10 +5,10 @@ import { StatusCode } from "../utils/StatusCode";
 export const novaTransacaoController = async (req: IncomingMessage, res: ServerResponse) => {
 
     // Recupera a transação enviada pela requisição
-    req.on('data', async (t) => {
+    req.on('data', async (transacao) => {
 
         // Enviar os dados para o services
-        const responseStatusCode: StatusCode = await novaTransacaoService(JSON.parse(t.toString()));
+        const responseStatusCode: StatusCode = await novaTransacaoService(transacao);
 
         // Devolver a resposta para o servidor
         res.writeHead(responseStatusCode);
