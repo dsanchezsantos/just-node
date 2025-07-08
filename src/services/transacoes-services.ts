@@ -39,7 +39,7 @@ export const deletarTransacoesService = async () => {
     await createLogRepository({
         modulo: 'transacao',
         statusCode: statusCodeResponse,
-        metodo: HttpMethods.POST,
+        metodo: HttpMethods.DELETE,
         data: null
     })
     

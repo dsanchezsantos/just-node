@@ -1,0 +1,65 @@
+[
+  {
+    "dataHoraLog": 1752006587825,
+    "log": {
+      "modulo": "estatistica",
+      "statusCode": 200,
+      "metodo": "GET",
+      "data": null
+    }
+  },
+  {
+    "dataHoraLog": 1752006591650,
+    "log": {
+      "modulo": "estatistica",
+      "statusCode": 200,
+      "metodo": "GET",
+      "data": null
+    }
+  },
+  {
+    "dataHoraLog": 1752006605616,
+    "log": {
+      "modulo": "estatistica",
+      "statusCode": 200,
+      "metodo": "GET",
+      "data": null
+    }
+  },
+  {
+    "dataHoraLog": 1752006617791,
+    "log": {
+      "modulo": "transacao",
+      "statusCode": 201,
+      "metodo": "POST",
+      "data": { "valor": 5141.85, "dataHora": "2025-07-08T17:09:05.123Z" }
+    }
+  },
+  {
+    "dataHoraLog": 1752006646896,
+    "log": {
+      "modulo": "transacao",
+      "statusCode": 200,
+      "metodo": "POST",
+      "data": null
+    }
+  },
+  {
+    "dataHoraLog": 1752006702878,
+    "log": {
+      "modulo": "transacao",
+      "statusCode": 201,
+      "metodo": "POST",
+      "data": { "valor": 5141.85, "dataHora": "2025-07-08T17:09:05.123Z" }
+    }
+  },
+  {
+    "dataHoraLog": 1752006712768,
+    "log": {
+      "modulo": "transacao",
+      "statusCode": 200,
+      "metodo": "DELETE",
+      "data": null
+    }
+  }
+]

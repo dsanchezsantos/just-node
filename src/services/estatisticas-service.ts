@@ -87,7 +87,7 @@ export const getEstatisticasService = async (): Promise<EstatisticaResponseModel
         } else {
 
             // StatusCode para o response
-            statusCodeResponse = StatusCode.error;
+            statusCodeResponse = StatusCode.ok;
 
             // Manipula a resposta
             response = {
