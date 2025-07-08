@@ -1,21 +1,29 @@
 import { IncomingMessage, ServerResponse } from "http";
+import { novaTransacaoService, deletarTransacoesService } from "../services/transacoes-services";
+import { StatusCode } from "../utils/StatusCode";
 
 export const novaTransacaoController = async (req: IncomingMessage, res: ServerResponse) => {
-    res.writeHead(200, {
-        'content-type': 'application/json'
+
+    // Recupera a transação enviada pela requisição
+    req.on('data', async (t) => {
+
+        // Enviar os dados para o services
+        const responseStatusCode: StatusCode = await novaTransacaoService(JSON.parse(t.toString()));
+
+        // Devolver a resposta para o servidor
+        res.writeHead(responseStatusCode);
+        res.end();
     });
-    res.write(JSON.stringify({
-        resultado: 'novaTransacao'
-    }));
-    res.end();
+
 }
 
-export const deletarTransacaoController = async (req: IncomingMessage, res: ServerResponse) => {
-    res.writeHead(200, {
-        'content-type': 'application/json'
-    });
-    res.write(JSON.stringify({
-        resultado: "deletarTransacao"
-    }));
+export const deletarTransacoesController = async (req: IncomingMessage, res: ServerResponse) => {
+    
+    // Solicita ao service que organize o fluxo deleção dos dados
+    let responseStatusCode: StatusCode = await deletarTransacoesService();
+
+    // Devolver a resposta para o servidor
+    res.writeHead(responseStatusCode);
     res.end();
+
 }
