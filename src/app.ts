@@ -1,5 +1,11 @@
 import { IncomingMessage, ServerResponse } from "http";
 
+import { Routes } from "./routes/routes";
+import { HttpMethods } from "./utils/HttpMethods";
+
+import * as TransacoesController from "./controllers/transacoes-controller";
+import * as EstatisticasController from "./controllers/estatistica-controller";
+
 // Iniciar a aplicação do servidor
 export const serverApp = async (request: IncomingMessage, response: ServerResponse) => {
 
@@ -8,45 +14,27 @@ export const serverApp = async (request: IncomingMessage, response: ServerRespon
 
     // Verifica o modulo acionado pelo cliente
 
-    // Caso1: Estatística
-    if (url === 'estatistica') {
+    // Caso 1: Estatística
+    if (url === Routes.ESTATISTICA) {
 
         // Caso o usuario deseje ver as estatisticas
-        if (request.method === 'GET') {
-
-            response.writeHead(200, {'content-type': 'application/json'});
-            response.write(JSON.stringify({
-                resultado: 'estatistica'
-            }));
-            response.end();
+        if (request.method === HttpMethods.GET) {
+            await EstatisticasController.getEstatisticasController(request, response);
         }
 
     }
 
-    // Caso2: Transações
-    if (url === 'transacao') {
+    // Caso 2: Transações
+    if (url === Routes.TRANSACAO) {
 
         // Caso o usuario queira adicionar uma nova transacao
-        if (request.method === 'POST') {
-
-            response.writeHead(200, {
-                'content-type': 'application/json'
-            });
-            response.write(JSON.stringify({
-                resultado: 'novaTransacao'
-            }));
-            response.end();
+        if (request.method === HttpMethods.POST) {
+            await TransacoesController.novaTransacaoController(request, response);
         }
 
         // Caso o usuario queira deletar uma transacao
-        if(request.method === 'DELETE') {
-            response.writeHead(200, {
-                'content-type': 'application/json'
-            });
-            response.write(JSON.stringify({
-                resultado: "deletarTransacao"
-            }));
-            response.end();
+        if(request.method === HttpMethods.DELETE) {
+            await TransacoesController.deletarTransacaoController(request, response);
         }
         
     }
