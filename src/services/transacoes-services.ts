@@ -1,4 +1,6 @@
+import { createLogRepository } from "../repositories/logs-repository";
 import { deletarTrancascoesRepository, novaTransacaoRepository } from "../repositories/transacoes-repository";
+import { HttpMethods } from "../utils/HttpMethods";
 import { StatusCode } from "../utils/StatusCode";
 
 export const novaTransacaoService = async (transacaoParam: string): Promise<StatusCode> => {
@@ -13,15 +15,36 @@ export const novaTransacaoService = async (transacaoParam: string): Promise<Stat
     if (!isTipagemTransacaoCorreta) {
         return StatusCode.invalidEntity;
     }
+
+    const statusCodeResponse: StatusCode = await novaTransacaoRepository(transacao);
+
+    // Cria o registro do log
+    await createLogRepository({
+        modulo: 'transacao',
+        statusCode: statusCodeResponse,
+        metodo: HttpMethods.POST,
+        data: transacao
+    })
     
     // Caso esteja de acordo, envia para o repository do modulo
-    return await novaTransacaoRepository(transacao);
+    return statusCodeResponse;
 }
 
 export const deletarTransacoesService = async () => {
 
     // Solicita ao repository a deleção dos dados
-    return await deletarTrancascoesRepository();
+    const statusCodeResponse = await deletarTrancascoesRepository();
+    
+    // Cria o registro do log
+    await createLogRepository({
+        modulo: 'transacao',
+        statusCode: statusCodeResponse,
+        metodo: HttpMethods.POST,
+        data: null
+    })
+    
+    // Retorna o status code
+    return statusCodeResponse;
     
 }
 

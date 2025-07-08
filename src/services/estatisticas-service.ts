@@ -1,9 +1,15 @@
 import { EstatisticaResponseModel } from "../models/estatistica-response-model";
 import { TransacaoModel } from "../models/transacao-model";
 import { getEstatisticasRepository } from "../repositories/estatisticas.repository";
+import { createLogRepository } from "../repositories/logs-repository";
+import { HttpMethods } from "../utils/HttpMethods";
 import { StatusCode } from "../utils/StatusCode";
 
 export const getEstatisticasService = async (): Promise<EstatisticaResponseModel> => {
+
+    // Variavel de resposta
+    let response = null;
+    let statusCodeResponse: StatusCode;
 
     // Tempo de calculo para filtragem das transacoes
     const segundosParaFiltragem: number = process.env.SEGUNDOS_ESTATISTICA ? parseInt(process.env.SEGUNDOS_ESTATISTICA) : 60;
@@ -13,12 +19,15 @@ export const getEstatisticasService = async (): Promise<EstatisticaResponseModel
     
     // Verifica se algum conteudo valido foi retornado
     if (dataRepository !== 500 && typeof dataRepository === 'string') {
+
+        // Status code para o response
+        statusCodeResponse = StatusCode.ok;
         
         // Converte o texto recebido para JSON
         const dataJSON: TransacaoModel[] = JSON.parse(dataRepository);
         
         // Confere se existem transações no último minuto e as armazena
-        const transacoesDoUltimoMinuto = dataJSON.filter((transacao) => {
+        const transacoesDoUltimoMinuto: TransacaoModel[] = dataJSON.filter((transacao) => {
             
             // Seleciona o momento atual
             const agora = Date.now();
@@ -31,7 +40,6 @@ export const getEstatisticasService = async (): Promise<EstatisticaResponseModel
             
             return dataHoraTimestamp >= agoraMenosUmMinuto && dataHoraTimestamp <= agora;
         });
-        console.log(transacoesDoUltimoMinuto);
         
         // Verifica se realmente existem transações no ultimo minuto
         if (transacoesDoUltimoMinuto.length !== 0) {
@@ -52,10 +60,10 @@ export const getEstatisticasService = async (): Promise<EstatisticaResponseModel
     
             //Maior valor
             const max = dataJSON.reduce((maior, atual) => {return atual.valor > maior.valor ? atual : maior;}).valor;
-    
-            // Retorna para o cliente
-            return {
-                statusCode: StatusCode.ok,
+            
+            // Manipula a resposta
+            response = {
+                statusCode: statusCodeResponse,
                 estatisticas: {
                     count: count,
                     sum: sum,
@@ -63,13 +71,27 @@ export const getEstatisticasService = async (): Promise<EstatisticaResponseModel
                     min: min,
                     max: max
                 }
-            }
+            };
+
+            // Registra o log
+            createLogRepository({
+                modulo: 'estatistica',
+                statusCode: statusCodeResponse,
+                metodo: HttpMethods.GET,
+                data: null
+            })
+            
+            // Retorna para o cliente
+            return response;
             
         } else {
 
-            // Retorna para o cliente
-            return {
-                statusCode: StatusCode.ok,
+            // StatusCode para o response
+            statusCodeResponse = StatusCode.error;
+
+            // Manipula a resposta
+            response = {
+                statusCode: statusCodeResponse,
                 estatisticas: {
                     count: 0,
                     sum: 0,
@@ -77,7 +99,18 @@ export const getEstatisticasService = async (): Promise<EstatisticaResponseModel
                     min: 0,
                     max: 0
                 }
-            }
+            };
+
+            // Registra o log
+            createLogRepository({
+                modulo: 'estatistica',
+                statusCode: statusCodeResponse,
+                metodo: HttpMethods.GET,
+                data: null
+            })
+
+            // Retorna para o cliente
+            return response;
 
         }
 
