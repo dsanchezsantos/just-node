@@ -1,4 +1,4 @@
 export enum Routes {
-    TRANSACAO = '/transacao',
-    ESTATISTICA = '/estatistica'
+    TRANSACAO = 'transacao',
+    ESTATISTICA = 'estatistica'
 }
